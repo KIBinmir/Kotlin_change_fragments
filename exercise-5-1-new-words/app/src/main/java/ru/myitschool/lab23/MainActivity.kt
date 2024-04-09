@@ -8,10 +8,13 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.io.BufferedWriter
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.FileWriter
 import java.io.IOException
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var writeExternal: Button
@@ -52,45 +55,66 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
     private fun writeData(storage: String) {
-        when(storage) {
+        val data = et_wordsInput.text.toString()
+
+        val list_words = data.replace(" ", "").split(",")
+        tv_fileContent.text = list_words.size.toString()
+        val month = (Calendar.getInstance().get(Calendar.MONTH)+1).toString()
+        et_wordsInput.setText("")
+        val dir = when(storage) {
+            "internal" -> {
+                File(applicationContext.filesDir, month)
+            }
+            "external" -> {
+                getExternalFilesDir(month)
+            }
+            else -> {
+                File(month)
+            }
+        }
+        if (!dir!!.exists()) {
+            dir.mkdir()
+        }
+        val file = File(dir, "words.txt")
+        try {
+            file.createNewFile()
+            val wr = BufferedWriter(FileWriter(file))
+            list_words.forEach { wr.write("$it\n") }
+            wr.close()
+        }
+        catch (_: IOException) {}
+        /*when(storage) {
             "internal" -> {
                 //val myInternalFile = File(getDir(filepath, Context.MODE_PRIVATE), filename)
                 try {
                     //val fos: FileOutputStream = FileOutputStream(myInternalFile)
                     val fos: FileOutputStream = openFileOutput(filename, Context.MODE_PRIVATE)
-                    val data = et_wordsInput.text.toString()
-                    val lst = data.split(",")
-                    tv_fileContent.text = lst.size.toString()
-                    val list_words = data.trim().replace(",", "\n")
+
+
+
                     fos.write(list_words.toByteArray())
                     fos.flush()
                     fos.close()
-                    printMessage("Sucsses!, File is writed")
+                    //printMessage("Sucsses!, File is writed")
                 } catch (e: IOException) {
-                    printMessage("Error!, File dont write")
-                    e.printStackTrace()
+                    //printMessage("Error!, File dont write")
+                    //e.printStackTrace()
                 }
             }
             "external" -> {
                 val myExternalFile = File(getExternalFilesDir(filepath), filename)
                 try {
                     val fos: FileOutputStream = FileOutputStream(myExternalFile)
-                    val data = et_wordsInput.text.toString()
-                    val lst = data.split(",")
-                    tv_fileContent.text = lst.size.toString()
-                    val list_words = data.trim().replace(",", "\n")
                     fos.write(list_words.toByteArray())
                     fos.flush()
                     fos.close()
-                    printMessage("Sucsses!, File is writed")
+                    //printMessage("Sucsses!, File is writed")
                 } catch (e: IOException) {
-                    printMessage("Error!, File dont write")
-                    e.printStackTrace()
+                    //printMessage("Error!, File dont write")
+                    //e.printStackTrace()
                 }
             }
-        }
-
-        et_wordsInput.setText("")
+        }*/
     }
 
     /*private fun readData(storage: String) {
