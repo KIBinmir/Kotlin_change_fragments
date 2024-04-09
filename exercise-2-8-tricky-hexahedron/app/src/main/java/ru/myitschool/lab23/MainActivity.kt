@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 //import android.view.View
 //import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -27,12 +28,14 @@ class MainActivity : AppCompatActivity() {
         val option = resources.getStringArray(R.array.actions)
         val spin = findViewById<Spinner>(R.id.spinner)
 
-        val but = findViewById<Button>(R.id.calculate)
+        val but = findViewById<View>(R.id.calculate)
         val a = findViewById<EditText>(R.id.side_a)
         val b = findViewById<EditText>(R.id.side_b)
         val c = findViewById<EditText>(R.id.side_c)
 
         val ta = findViewById<TextView>(R.id.side_a_label)
+        val tb = findViewById<TextView>(R.id.side_b_label)
+        val tc = findViewById<TextView>(R.id.side_c_label)
         val txt = findViewById<TextView>(R.id.solution)
 
 
